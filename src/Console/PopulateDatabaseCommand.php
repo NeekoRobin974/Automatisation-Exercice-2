@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Models\Company;
 use App\Models\Employee;
 use App\Models\Office;
+use Faker\Factory;
 use Illuminate\Support\Facades\Schema;
 use Slim\App;
 use Symfony\Component\Console\Command\Command;
@@ -40,8 +41,12 @@ class PopulateDatabaseCommand extends Command
         $db->getConnection()->statement("TRUNCATE `companies`");
         $db->getConnection()->statement("SET FOREIGN_KEY_CHECKS=1");
 
+        //Ajouter des données aléatoires cohérentes
+        $faker = Factory::create('fr_FR');
 
-        $db->getConnection()->statement("INSERT INTO `companies` VALUES
+        $this->createCompanies($db, $faker, 4);
+
+        /*$db->getConnection()->statement("INSERT INTO `companies` VALUES
     (1,'Stack Exchange','0601010101','stack@exchange.com','https://stackexchange.com/','https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Verisure_information_technology_department_at_Ch%C3%A2tenay-Malabry_-_2019-01-10.jpg/1920px-Verisure_information_technology_department_at_Ch%C3%A2tenay-Malabry_-_2019-01-10.jpg', now(), now(), null),
     (2,'Google','0602020202','contact@google.com','https://www.google.com','https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Google_office_%284135991953%29.jpg/800px-Google_office_%284135991953%29.jpg?20190722090506',now(), now(), null)
         ");
@@ -67,7 +72,64 @@ class PopulateDatabaseCommand extends Command
         $db->getConnection()->statement("update companies set head_office_id = 1 where id = 1;");
         $db->getConnection()->statement("update companies set head_office_id = 3 where id = 2;");
 
-        $output->writeln('Database created successfully!');
+        $output->writeln('Database created successfully!');*/
         return 0;
+    }
+
+    protected function createCompanies($db, $faker, int $nbCompany): void{
+        $now = date('Y-m-d H:i:s');
+
+        for ($i = 0; $i < $nbCompany; $i++) {
+            $companyData = [
+                'name' => $faker->company(),
+                'phone' => $faker->phoneNumber(),
+                'email' => $faker->email(),
+                'website' => $faker->url(),
+                'image' => $faker->imageUrl(640, 480, 'animals', true),
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+            $companyId = $db->table('companies')->insert($companyData);
+            $this->createOffices($db, $faker, 3, $companyId);
+        }
+    }
+
+    protected function createOffices($db, $faker, int $nbOffice, $companyId): void{
+        $now = date('Y-m-d H:i:s');
+
+        for ($i = 0; $i < $nbOffice; $i++) {
+            $officeData = [
+                'name' => $faker->company(),
+                'address' => $faker->address(),
+                'city' => $faker->city(),
+                'zip_code' => $faker->postcode(),
+                'country' => $faker->countryCode(),
+                'email' => $faker->email(),
+                'phone' => $faker->phoneNumber(),
+                'company_id' => $companyId,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+            $officeId = $db->table('offices')->insert($officeData);
+            $this->createEmployees($db, $faker, 3, $officeId);
+        }
+    }
+
+    protected function createEmployees($db, $faker, int $nbEmploye, $officeId): void{
+        $now = date('Y-m-d H:i:s');
+
+        for ($i = 0; $i < $nbEmploye; $i++) {
+            $employeData = [
+                'first_name' => $faker->firstName(),
+                'last_name' => $faker->lastName(),
+                'office_id' => $officeId,
+                'email' => $faker->email(),
+                'phone' => $faker->phoneNumber(),
+                'job_title' => $faker->jobTitle(),
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+            $db->table('employees')->insert($employeData);
+        }
     }
 }
