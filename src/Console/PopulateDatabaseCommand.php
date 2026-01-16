@@ -90,7 +90,7 @@ class PopulateDatabaseCommand extends Command
                 'created_at' => $now,
                 'updated_at' => $now,
             ];
-            $companyId = $db->table('companies')->insert($companyData);
+            $companyId = $db->table('companies')->insertGetId($companyData);
             $this->createOffices($db, $faker, 3, $companyId);
         }
     }
@@ -112,7 +112,7 @@ class PopulateDatabaseCommand extends Command
                 'created_at' => $now,
                 'updated_at' => $now,
             ];
-            $officeId = $db->table('offices')->insert($officeData);
+            $officeId = $db->table('offices')->insertGetId($officeData);
             $db->table('companies')
                 ->where('id', $companyId)
                 ->update(['head_office_id' => $officeId]);

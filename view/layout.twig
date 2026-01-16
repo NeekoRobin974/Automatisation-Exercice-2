@@ -5,7 +5,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{% block title %}Annuaire des société{% endblock %}</title>
 	{% block stylesheets %}
-		<link rel="stylesheet" href="/assets/style.css" >
+		<script type="module" src="http://localhost:3000/build/@vite/client"></script>
+		<link rel="stylesheet" href="http://localhost:3000/build/style.css">
 	{% endblock %}
 </head>
 
@@ -26,7 +27,7 @@
 </div>
 
 {% block scripts %}
-	<script type="module" src="http://localhost:3000/build/assets/script.js"></script>
+	<script type="module" src="http://localhost:3000/build/script.js"></script>
 {% endblock %}
 </body>
 </html>
