@@ -28,7 +28,7 @@ class PopulateDatabaseCommand extends Command
         $this->setDescription('Populate database');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output ): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('Populate database...');
 
@@ -76,7 +76,8 @@ class PopulateDatabaseCommand extends Command
         return 0;
     }
 
-    protected function createCompanies($db, $faker, int $nbCompany): void{
+    protected function createCompanies($db, $faker, int $nbCompany): void
+    {
         $now = date('Y-m-d H:i:s');
 
         for ($i = 0; $i < $nbCompany; $i++) {
@@ -94,7 +95,8 @@ class PopulateDatabaseCommand extends Command
         }
     }
 
-    protected function createOffices($db, $faker, int $nbOffice, $companyId): void{
+    protected function createOffices($db, $faker, int $nbOffice, $companyId): void
+    {
         $now = date('Y-m-d H:i:s');
 
         for ($i = 0; $i < $nbOffice; $i++) {
@@ -115,7 +117,8 @@ class PopulateDatabaseCommand extends Command
         }
     }
 
-    protected function createEmployees($db, $faker, int $nbEmploye, $officeId): void{
+    protected function createEmployees($db, $faker, int $nbEmploye, $officeId): void
+    {
         $now = date('Y-m-d H:i:s');
 
         for ($i = 0; $i < $nbEmploye; $i++) {
