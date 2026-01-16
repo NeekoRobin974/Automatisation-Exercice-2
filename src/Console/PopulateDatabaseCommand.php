@@ -113,6 +113,9 @@ class PopulateDatabaseCommand extends Command
                 'updated_at' => $now,
             ];
             $officeId = $db->table('offices')->insert($officeData);
+            $db->table('companies')
+                ->where('id', $companyId)
+                ->update(['head_office_id' => $officeId]);
             $this->createEmployees($db, $faker, 3, $officeId);
         }
     }
